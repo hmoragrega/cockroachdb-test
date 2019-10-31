@@ -1,0 +1,55 @@
+version: '3'
+services:
+  # CockroachDB Load Balancer
+  crdb-lb:
+    hostname: crdb-lb
+    image: haproxy:2.0.7
+    volumes: ['./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro']
+    networks: ["roachnet"]
+    ports:
+      - "26257:26257"
+      - "8888:8080"
+      - "8081:8081"
+    links:
+      - roach1
+      - roach2
+      - roach3
+  # CockroachDB default topology - 3 nodes
+  roach1:
+    image: cockroachdb/cockroach:v19.1.5
+    hostname: roach1
+    networks: ["roachnet"]
+    volumes: ["./cockroach-data/roach1:/cockroach/cockroach-data"]
+    command: "start --insecure --cache=.25 --max-sql-memory=.25"
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+  roach2:
+    image: cockroachdb/cockroach:v19.1.5
+    hostname: roach2
+    networks: ["roachnet"]
+    volumes: ["./cockroach-data/roach2:/cockroach/cockroach-data"]
+    command: "start --insecure --join=roach1 --cache=.25 --max-sql-memory=.25"
+    depends_on: ["roach1"]
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+  roach3:
+    image: cockroachdb/cockroach:v19.1.5
+    hostname: roach3
+    networks: ["roachnet"]
+    volumes: ["./cockroach-data/roach3:/cockroach/cockroach-data"]
+    command: "start --insecure --join=roach1 --cache=.25 --max-sql-memory=.25"
+    depends_on: ["roach1"]
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+networks:
+  roachnet:
+    driver: bridge
