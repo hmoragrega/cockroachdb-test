@@ -17,8 +17,8 @@ After writing the two monetary transactions the Database transaction tries to up
 It then `SELECT`s the balance to check whether it is below zero. 
 If it is below zero it rollbacks the transaction, if it is not below zero it commits the Database transaction.
 
-We expect only one Database transaction to succeed out of the 2000, meaning the remaining balance at the end of the
-program should be 5.00€.
+We expect only one Database transaction to succeed out of the 2000, which means that the remaining balance at the end of
+the program should be 5.00€.
 
 # Run the example
 

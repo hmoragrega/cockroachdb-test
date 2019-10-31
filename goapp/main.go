@@ -14,7 +14,7 @@ const mockedAccountID = 1
 
 func main() {
 	// Connect to one of the three nodes by passing through an HAProxy Load Balancer.
-	db, err := sql.Open("postgres", "postgresql://netdata@localhost:26257/bank?sslmode=disable")
+	db, err := sql.Open("postgres", "postgresql://myuser@localhost:26257/bank?sslmode=disable")
 	if err != nil {
 		log.Fatal("error connecting to the database: ", err)
 	}
