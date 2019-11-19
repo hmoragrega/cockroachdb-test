@@ -1,4 +1,16 @@
-version: '3'
+version: '3.7'
+
+networks:
+  roachnet:
+    driver: bridge
+
+x-ulimits:
+  &default-ulimits
+  nproc: 65535
+  nofile:
+    soft: 65535
+    hard: 65535
+
 services:
   # CockroachDB Load Balancer
   crdb-lb:
@@ -14,42 +26,28 @@ services:
       - roach1
       - roach2
       - roach3
+
   # CockroachDB default topology - 3 nodes
   roach1:
-    image: cockroachdb/cockroach:v19.1.5
+    image: cockroachdb/cockroach:v19.2.0
     hostname: roach1
     networks: ["roachnet"]
     volumes: ["./cockroach-data/roach1:/cockroach/cockroach-data"]
     command: "start --insecure --cache=.25 --max-sql-memory=.25"
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 65535
-        hard: 65535
+    ulimits: *default-ulimits
   roach2:
-    image: cockroachdb/cockroach:v19.1.5
+    image: cockroachdb/cockroach:v19.2.0
     hostname: roach2
     networks: ["roachnet"]
     volumes: ["./cockroach-data/roach2:/cockroach/cockroach-data"]
     command: "start --insecure --join=roach1 --cache=.25 --max-sql-memory=.25"
     depends_on: ["roach1"]
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 65535
-        hard: 65535
+    ulimits: *default-ulimits
   roach3:
-    image: cockroachdb/cockroach:v19.1.5
+    image: cockroachdb/cockroach:v19.2.0
     hostname: roach3
     networks: ["roachnet"]
     volumes: ["./cockroach-data/roach3:/cockroach/cockroach-data"]
     command: "start --insecure --join=roach1 --cache=.25 --max-sql-memory=.25"
     depends_on: ["roach1"]
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 65535
-        hard: 65535
-networks:
-  roachnet:
-    driver: bridge
+    ulimits: *default-ulimits
