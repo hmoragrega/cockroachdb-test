@@ -10,7 +10,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const mockedAccountID = 1
+const mockedAccountID = "90903a90-d8f0-45eb-a4aa-dea4d24b2f54"
 
 func main() {
 	// Connect to one of the three nodes by passing through an HAProxy Load Balancer.

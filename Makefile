@@ -1,9 +1,9 @@
 .PHONY: run
 run:
-	docker-compose up
+	docker-compose up --force-recreate
 
-.PHONY: exec
-exec:
+.PHONY: sql
+sql:
 	docker-compose exec roach1 ./cockroach sql --insecure -d="bank"
 
 .PHONY: bootstrap

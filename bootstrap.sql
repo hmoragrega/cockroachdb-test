@@ -5,14 +5,14 @@ GRANT ALL ON DATABASE bank TO myuser;
 USE bank;
 
 CREATE TABLE accounts (
-    id INT8 NOT NULL,
+    id UUID NOT NULL,
     balance_cents INT8 NOT NULL,
     CONSTRAINT "primary" PRIMARY KEY (id ASC),
     FAMILY "primary" (id, balance_cents)
 );
 
 CREATE TABLE transactions (
-    account INT8 NOT NULL,
+    account UUID NOT NULL,
     id UUID NOT NULL,
     amount_cents INT8 NOT NULL,
     description STRING NULL,
@@ -21,4 +21,4 @@ CREATE TABLE transactions (
     FAMILY "primary" (account, id, amount_cents, description)
 ) INTERLEAVE IN PARENT accounts (account);
 
-INSERT INTO accounts (id, balance_cents) VALUES (1, 100000); /* 1,000.00€ */
+INSERT INTO accounts (id, balance_cents) VALUES ('90903a90-d8f0-45eb-a4aa-dea4d24b2f54', 100000); /* 1,000.00€ */

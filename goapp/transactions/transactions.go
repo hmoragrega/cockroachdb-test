@@ -10,7 +10,7 @@ type Transaction struct {
 	Description string
 }
 
-func ProcessList(db *sql.DB, accountID int64, txs []Transaction, parallelize bool) error {
+func ProcessList(db *sql.DB, accountID string, txs []Transaction, parallelize bool) error {
 	dbTx, err := db.Begin()
 	if err != nil {
 		return fmt.Errorf("could not start transaction: %v", err)
