@@ -12,7 +12,11 @@ bootstrap:
 
 .PHONY: test
 test: bootstrap
-	cd goapp && go run main.go
+	cd goapp && go run -mod vendor main.go
+
+.PHONY: stress
+stress: bootstrap
+	cd goapp && go build -mod vendor main.go && cd .. && ./stress.sh
 
 .PHONY: rm
 rm:

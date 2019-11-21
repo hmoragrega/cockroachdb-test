@@ -51,3 +51,8 @@ services:
     command: "start --insecure --join=roach1 --cache=.25 --max-sql-memory=.25"
     depends_on: ["roach1"]
     ulimits: *default-ulimits
+  stats:
+    image: graphiteapp/docker-graphite-statsd:latest
+    ports:
+      - 80:80
+      - 8125:8125/udp

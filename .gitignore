@@ -1,2 +1,3 @@
 /cockroach-data/*
 !/cockroach-data/.gitkeep
+vendor
