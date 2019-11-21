@@ -58,6 +58,16 @@ func ProcessList(db *sql.DB, accountID string, txs []Transaction, parallelize bo
 	return nil
 }
 
+func ReadBalance(db *sql.DB, accountID string) (int64, error) {
+	var balance int64
+	row := db.QueryRow("SELECT balance_cents FROM accounts WHERE id = $1", accountID)
+	if err := row.Scan(&balance); err != nil {
+		return 0, err
+	}
+
+	return balance, nil
+}
+
 func rollback(dbTx *sql.Tx, wrappingError error) error {
 	if err := dbTx.Rollback(); err != nil {
 		return fmt.Errorf("could not rollback (wrapped error: %v): %v", wrappingError, err)

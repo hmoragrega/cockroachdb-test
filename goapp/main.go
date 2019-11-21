@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"goapp/transactions"
 	"log"
@@ -45,6 +46,28 @@ func main() {
 		},
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
+
+	for i := 0; i < 100; i++ {
+		// delta-1 out of delta transactions are going to fail
+		go func() {
+		out:
+			for {
+				select {
+				case <-ctx.Done():
+					break out
+				default:
+					b, err := transactions.ReadBalance(db, mockedAccountID)
+					if err != nil {
+						log.Printf("Could not read the balance: %v", err)
+					} else {
+						log.Printf("Current account balance: %d", b)
+					}
+				}
+			}
+		}()
+	}
+
 	delta := 2000
 	start := time.Now()
 	parallelize := true
@@ -62,6 +85,8 @@ func main() {
 	}
 
 	wg.Wait()
+	cancel()
+
 	elapsed := time.Since(start)
 	log.Printf("Script took %s\n", elapsed)
 	log.Printf("DB Stats: %+v\n", db.Stats())
