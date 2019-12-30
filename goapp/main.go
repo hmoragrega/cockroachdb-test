@@ -68,7 +68,7 @@ func main() {
 		}()
 	}
 
-	delta := 2000
+	delta := 100
 	start := time.Now()
 	parallelize := true
 
@@ -88,8 +88,6 @@ func main() {
 	cancel()
 
 	elapsed := time.Since(start)
-	log.Printf("Script took %s\n", elapsed)
-	log.Printf("DB Stats: %+v\n", db.Stats())
 
 	// Print out the balance, it should show 5€ left (i.e. 500).
 	row := db.QueryRow("SELECT balance_cents FROM accounts WHERE id = $1", mockedAccountID)
@@ -118,4 +116,7 @@ func main() {
 
 		log.Printf("%v - %v - %v\n", id, amt, desc)
 	}
+
+	log.Printf("Script took %s\n", elapsed)
+	log.Printf("DB Stats: %+v\n", db.Stats())
 }
